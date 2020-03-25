@@ -60,7 +60,7 @@ int main(int argc, char *argv[]){
 			}*/
 		}
 		//Renderização
-		//glClear(GL_COLOR_BUFFER_BIT);//LIMPARBUFFER
+		glClear(GL_COLOR_BUFFER_BIT);//LIMPARBUFFER
 		//inicia a matriz de desenho
 		glPushMatrix();
 		//dimensões
