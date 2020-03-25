@@ -5,8 +5,8 @@
 
 ENTITIE::ENTITIE(double x, double y){ //construtor
     //std::cout<<"Entidade Criada\n";
-    this->x0 = x;
-    this->y0 = y;
+    this->initX = x;
+    this->initY = y;
     this->x = x;
     this->y = y;
     //sprite

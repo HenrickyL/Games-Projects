@@ -6,7 +6,7 @@
 class ENTITIE{
 protected:
 	//atributos
-	double x0,y0;
+	double initX,initY;
 	double x,y; //posições
 	//sprite
 	

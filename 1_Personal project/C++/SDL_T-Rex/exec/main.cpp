@@ -1,13 +1,13 @@
 #include <iostream>
 #include <SDL/SDL.h>
 #include "SDL/SDL_opengl.h"
-#include "../model/T_rex.h"
-#include <math.h>
 #include "../model/variable.h"
+#include "../model/T_rex.h"
 #include "../model/Floor.h"
 
+
 /*terminal:
-	g++ -o main main.cpp ../model/Floor.cpp ../model/Entitie.cpp ../model/T_rex.cpp ../model/variable.h -lSDLmain -lSDL -lGL
+	g++ -o main main.cpp ../model/Floor.cpp ../model/Entitie.cpp ../model/T_rex.cpp ../model/variable.h -lSDLmain -lSDL -lGL && ./main
 */
 
 void sdlRequisitos(){
@@ -21,12 +21,12 @@ SDL_Init(SDL_INIT_EVERYTHING);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE,16);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER,1);
 	//nome para a janela
-	SDL_WM_SetCaption("MEu primeiro jogo SDL",NULL);
+	SDL_WM_SetCaption(Window,NULL);
 	//size janela
-	SDL_SetVideoMode(width,height,32,SDL_OPENGL);
+	SDL_SetVideoMode(WIDTH,HEIGHT,32,SDL_OPENGL);
 	//cor inicial
 	glClearColor(1,1,1,1);//ultimo alpha
-	glViewport(0,0,width,height);
+	glViewport(0,0,WIDTH,HEIGHT);
 	//sombreamento
 	glShadeModel(GL_SMOOTH);
 	//2D
@@ -42,9 +42,9 @@ int main(int argc, char *argv[]){
 	//requisitos do SDL
 	sdlRequisitos();
 	//Inicializar
-	Floor chao = Floor();
-	T_REX dino = T_REX(x0,height-y0);
-	dino.start();
+	Floor chao = Floor(WIDTH,HEIGHT,posX0,HEIGHT-posY0);
+	T_REX dino = T_REX(100, 240);
+	//dino.start();
 
 	
 	///loop do jogo
@@ -62,15 +62,16 @@ int main(int argc, char *argv[]){
 		//inicia a matriz de desenho
 		glPushMatrix();
 		//dimensões
-		glOrtho(0,width,height,0,-1,1);
+		glOrtho(0,WIDTH,HEIGHT,0,-1,1);
 
 ////////////////////////////////////////////
 		//Renderização
 		dino.render();
 		chao.render();
 		//atualizações ticks
-		chao.tick();
+		//chao.tick();
 		dino.tick();
+		if(ticks%25 == 0) dino.setX(dino.getX()+5);
 ///////////////////////////////////////////
 
 

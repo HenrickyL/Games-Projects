@@ -5,8 +5,8 @@
 
 class Floor : public ENTITIE{
 public:
-    Floor();
-    ~Floor();
+    Floor(double x, double y, double w, double h);
+    //~Floor();
     
     //métodos
     void render();

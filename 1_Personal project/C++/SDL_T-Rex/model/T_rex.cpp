@@ -4,7 +4,7 @@
 #include <vector>
 #include <SDL/SDL.h>
 #include "SDL/SDL_opengl.h"
-#include "variable.h"
+
 
 
 //construtor e destrutor por omissão são da pai
@@ -50,7 +50,7 @@ void T_REX::tick(){
 //complemento do tick
 void T_REX::howMuchRun(){
     if(this->status != -1 ){ //se não tiver começado
-        this->run = this->x - this->x0;
+        this->run = this->x - this->initX;
     }
 }
 void T_REX::applyGravity(){
@@ -61,7 +61,7 @@ void T_REX::applyGravity(){
 }
 //end
 void T_REX::render(){
-    glPointSize(10);
+    glPointSize(30);
     glBegin(GL_POINTS);
 		glColor4ub(255,0,0,255);
 		glVertex2i(this->x,this->y);
