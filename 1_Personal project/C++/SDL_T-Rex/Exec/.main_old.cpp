@@ -42,9 +42,9 @@ int main(int argc, char *argv[]){
 	//requisitos do SDL
 	sdlRequisitos();
 	//Inicializar
-	Floor chao = Floor(WIDTH,HEIGHT,posX0,HEIGHT-posY0);
-	T_REX dino = T_REX(100, 240);
-	//dino.start();
+	Floor chao =  Floor(0,100,WIDTH,HEIGHT);//WIDTH,HEIGHT,posX0,HEIGHT-posY0);
+	T_REX dino = T_REX(WIDTH/2, HEIGHT/2, WIDTH,HEIGHT);
+	//dino->start();
 
 	
 	///loop do jogo
@@ -66,19 +66,19 @@ int main(int argc, char *argv[]){
 
 ////////////////////////////////////////////
 		//Renderização
-		dino.render();
 		chao.render();
+		dino.render();
+		
 		//atualizações ticks
 		//chao.tick();
 		dino.tick();
-		if(ticks%25 == 0) dino.setX(dino.getX()+5);
 ///////////////////////////////////////////
 
 
 
 		//Animação
 	 	SDL_GL_SwapBuffers();
-		 ticks++;
+		ticks++;
 	}
 	//VVVVVV LOGICA VVVVVV
 
