@@ -1,15 +1,21 @@
 #include <iostream>
 #include "../Header/Window.h"
 //que notação legal
+int Window::_ticks=0;
+bool Window::_closed=false;
+int Window::_time=0;
+SDL_Renderer *Window::_rendererS=NULL;
 
 Window::Window(const std::string &title, int width, int height) :
 _title(title), _width(width), _height(height)
 {   
     _closed = !init();
+    _rendererS=_renderer;
 }
 Window::~Window(){
     SDL_DestroyRenderer(_renderer);
     SDL_DestroyWindow(_window);
+    TTF_Quit();//texto
     SDL_Quit();
 }
 
@@ -38,18 +44,27 @@ bool Window::init(){
         std::cerr << "Falha em criar o Renderizador!\n";
         return 0;
     }
+    if(TTF_Init() == -1){
+        std::cerr << "Falha em criar o SDL_ttf!\n";
+        return 0;
+    }
+
+
     return true;
 }
 void Window::setClosed(bool closed){
     _closed = closed;
 }
 void Window::pollEvents(){
+    //atualiza os ticks
+    _ticks++;
+    if(_ticks%10000 ==0 ) _time++;
     //crio um evento
     SDL_Event event;
     if(SDL_PollEvent(&event)){
         if(event.type == SDL_QUIT)  _closed = true;
     }
-
+    
 }
 
 void Window::clear() const{

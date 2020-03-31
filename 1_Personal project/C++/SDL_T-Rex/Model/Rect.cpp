@@ -7,6 +7,12 @@ Window(window),_x(x),_y(y)
     _w = 20;
     _h = 20;
 }
+Rect::Rect(const Window &window, double x, double y, int border):
+Window(window),_x(x),_y(y), _border(border)
+{  
+    _w = 20;
+    _h = 20;
+}
 Rect::Rect(const Window &window, int w, int h, double x, double y):
 Window(window), _w(w),_h(h),_x(x),_y(y)
 {
@@ -17,19 +23,27 @@ Rect::Rect(const Window &window, int w, int h, double x, double y, int r, int g,
 { 
 }
 void Rect::draw() const{
+    
     SDL_Rect rect;
-    rect.w = _w;
-    rect.h = _h;
-    rect.x = _x;
-    rect.y = _y;
-
+    rect.w = _w-_border-1;
+    rect.h = _h-_border-1;
+    rect.x = _x + _border;
+    rect.y = _y + _border;
+    SDL_Rect line;
+    line.w = _w;
+    line.h = _h;
+    line.x = _x;
+    line.y = _y;
+    SDL_SetRenderDrawColor(_renderer,0,0,0,255);
+    SDL_RenderFillRect(_renderer,&line);
     SDL_SetRenderDrawColor(_renderer,_r,_g,_b,_a);
     SDL_RenderFillRect(_renderer,&rect);
 }
-void Rect::pollEvents(){
+void Rect::pollEvents(){//está ocorrendo algum evento?
     //crio um evento
     SDL_Event event;
-    if(SDL_PollEvent(&event)){ //está ocorrendo algum evento?
+    if(SDL_PollEvent(&event)){
+        if(event.type == SDL_QUIT) setClosed(true);
         if(event.type == SDL_KEYDOWN){
              switch (event.key.keysym.sym){
                     case SDLK_UP:
@@ -75,4 +89,18 @@ void Rect::color(int r, int g, int b){
 }
 void Rect::alpha(int a){
     _a=a;
+}
+bool Rect::intersect(Rect B){
+    //interação de retangulo A com B
+    int Ax0 = _x, Ay0 = _y;
+    int Ax = _x+_w,Ay = _y+_h;
+    int Bx0 = B._x, By0 = B._y;
+    int Bx = B._x+B._w,By = B._y+B._h;    
+    if(
+        Bx0 <= Ax && By0 <= Ay || // Canto infD_A C_supE_B
+        Bx0 <= Ax && By >= Ay0 || //C_infE_B C_supD_A
+        Bx >= Ax0 && By0 <= Ay || //C_supD_B  C_indEA
+        Bx >= Ax0 && By >= Ay0 //C_supE_A C_infD_B
+        ) return 1;
+    else return 0;
 }

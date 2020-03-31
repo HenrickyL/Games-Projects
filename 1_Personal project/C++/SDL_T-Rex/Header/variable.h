@@ -15,7 +15,8 @@ int 					WIDTH = 1000;
 int						HEIGHT = 400;
 int                     ticks = 0;
 int 	                posX0 = 0;
-int						posY0 = 50;		
+int						posY0 = 50;
+int                     yFloor = HEIGHT - H_Floor;
 //loop
 bool                    running = true;
 
