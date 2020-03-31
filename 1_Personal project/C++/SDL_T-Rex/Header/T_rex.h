@@ -25,6 +25,7 @@ private:
 	void checkKey();
 	void up(); //pular
 	void down(); //abaixar
+	bool isFree(int nextY);
 
 public:
 	T_REX(Window &window , double x, double y); //Construtor Dinosauro

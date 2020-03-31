@@ -15,7 +15,7 @@ public:
     
     //variaveis
 private:
-    double _vx = 0.1;
+    double _vx = 0;//0.1;
     int _div = 16; // numero de divisões em tela
     bool _start = false;
     

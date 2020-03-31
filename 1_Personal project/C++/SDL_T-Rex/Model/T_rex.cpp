@@ -1,7 +1,13 @@
 //implementação
 #include <iostream>
 #include "../Header/T_rex.h"
+#include "../Header/Floor.h"
+#include "../Exec/main.cpp"
 #include <vector>
+template<typename Base, typename T>
+inline bool instanceof(const T*) {
+   return std::is_base_of<Base, T>::value;
+}
 
 
     //variaveis staticas
@@ -10,7 +16,7 @@
 //construtor e destrutor por omissão são da pai
 T_REX::T_REX(Window &window, double x, double y): 
 Entitie(window,x,y)
-{
+{   _type = "t_rex";
     _w=22;
     _h=30;
     this->status = -1; // em espera pra correr
@@ -26,7 +32,7 @@ void T_REX::up(){
     if(status != -1 && status != 1){
         std::cout<<"Dino up\n";
         status = 1;
-        _vy = _impulse; //impulso
+        _vy = 0.2; //impulso
     }
     
     
@@ -47,10 +53,10 @@ void T_REX::tick(){
     this->checkKey();
     //atualizo sua posição
     if(!dead && status != -1 && (_x+_w) < _width){
-        _x+=_vx; // um tick de posição
-        if(status == 1){
-            _y -=_vy;
-        }
+        
+        if(Window::_ticks%10 ==0)_x+=_vx; // um tick de posição
+        if(isFree(_y +_g - _vy)) _y += _g-_vy;
+        //if(status == 1) _y -=_vy;
     }
     // aplico gravidade
     applyGravity();
@@ -66,10 +72,9 @@ void T_REX::howMuchRun(){
     }
 }
 void T_REX::applyGravity(){
-    if(!dead && status < 1 && _y < _y0 /*&& _ticks%8==0*/){
+    if(!dead && status < 1 ){
         _vy -= _g; 
-    }if(_y > _y0){
-        _y = _y0;
+    }if(isFree(_y+_g-_vy)){
         status = 0;
     }
 }
@@ -94,3 +99,11 @@ void T_REX::render(){
     this->draw();
 }
 
+bool T_REX::isFree(int nextY){
+    for(int i =0;i<floors.size();i++){
+        Floor *f = floors.at(i);
+        if(this->intersect(*f) ){
+            return 0;
+        }
+    }return 1;
+}

@@ -5,28 +5,32 @@
 
 class Text : public Window{
 public:
-    Text(   Window &window, 
-            int font_size,
-            const std::string &messenge_text,
-            const SDL_Color &color);
-    Text(   const Window &window,
-            const std::string &font_path, 
-            int font_size,
-            const std::string &messenge_text,
-            const SDL_Color &color);
-    //metodos
-    void display(int x, int y);
-    static SDL_Texture *loadFont(SDL_Renderer *renderer, const std::string &font_path, int font_size,const std::string &messenge_text,const SDL_Color &color);
-    //getter e setter
-    double getWidth(){return _text_rect.w;}
-    double getHeight(){return _text_rect.h;}
+        Text(Window &window,int size);
+        Text(Window &window,int size,char* font_path);
+        ~Text();
+        void Error(bool error);
+        bool init(const char* text);
+        void drawText(const char* text, int x, int y);
+        void drawText(std::string &text, int x, int y);
+        void drawText(int text, int x, int y);
 private:
-    std::string _font_path = "../Fonts/arial.ttf";
-    SDL_Texture *_text_texture = NULL;
-    SDL_Rect _text_rect;
-
-
-
+        bool _start = false;
+        bool _error = false;
+        SDL_Rect _rect;
+        int _size = 24;
+        std::string _font_path = "../Fonts/arial.ttf";
+        std::string _text;
+        SDL_Color _color = {255,0,0};
+        //pointer
+        TTF_Font *_font;
+        SDL_Surface *_surface;
+        SDL_Texture *_texture;
+public://getter e setter
+        double getWidth();
+        double getHeight();
+        void setColor(SDL_Color &color);
+        void setText(char* text);
+        
 };
 
 

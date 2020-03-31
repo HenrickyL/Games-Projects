@@ -7,7 +7,6 @@
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_opengl.h"
 #include "SDL2/SDL_ttf.h"
-
 class Window{
 public:
     Window(const std::string &title, int width, int height);
@@ -17,10 +16,10 @@ public:
     static int _ticks; //contar tick no geral
     void pollEvents(); // verificar eventos
     void clear() const; //
-
     inline bool isClosed() const {return _closed;}//getIsClossed
     void setClosed(bool closed);
     void color(std::string cor);
+    void drawText(const char *text, int x, int y);
 private:
     bool init(); // criar a janela
      

@@ -1,9 +1,10 @@
-#ifndef VAR_H
-#define VAR_H
+#ifndef VARIABLE_H
+#define VARIABLE_H
 
 
 #include <vector>
 #include "Entitie.h"
+#include "Floor.h"
 #include <string>
 
 
@@ -19,6 +20,9 @@ int						posY0 = 50;
 int                     yFloor = HEIGHT - H_Floor;
 //loop
 bool                    running = true;
+std::vector<Entitie*>   entities;
+std::vector<Floor*>     floors;
+
 
 
 

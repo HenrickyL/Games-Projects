@@ -2,6 +2,7 @@
 #define RECT_H
 #include "../Header/Window.h"
 
+
 class Rect : public Window{
 public:
     Rect(const Window &window, double x, double y);
@@ -16,7 +17,9 @@ public:
     bool intersect(Rect B); // verificar contato de retangulos
     void set_X(double x){_x = x;}
     double get_X()const{return _x;}
+    std::string getType(){return _type;}
 protected:
+    std::string _type = "rect";
     int _border=1;
     int _w, _h;
     double _x, _y;

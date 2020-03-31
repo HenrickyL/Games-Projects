@@ -1,5 +1,6 @@
 #include <iostream>
 #include "../Header/Window.h"
+#include "SDL2/SDL_ttf.h"
 //que notação legal
 int Window::_ticks=0;
 bool Window::_closed=false;
@@ -17,7 +18,7 @@ Window::~Window(){
     SDL_DestroyWindow(_window);
     TTF_Quit();//texto
     SDL_Quit();
-}
+}   
 
 bool Window::init(){
     if(SDL_Init(SDL_INIT_EVERYTHING) !=0 ){
@@ -89,4 +90,15 @@ void Window::color(std::string cor){
     }else{
         
     }
+}
+
+void Window::drawText(const char *text, int x, int y) {
+  SDL_Color color = {255,0,0};
+  TTF_Font* font = TTF_OpenFont("../Fonts/arial.ttf", 24);
+  SDL_Surface* surface = TTF_RenderText_Blended(font, text, color);
+  SDL_Texture* texture = SDL_CreateTextureFromSurface(_renderer, surface);
+  SDL_Rect rect = {x, y, surface->w, surface->h};
+  SDL_FreeSurface(surface);
+  SDL_RenderCopy(_renderer, texture, nullptr, &rect);
+  SDL_DestroyTexture(texture);
 }

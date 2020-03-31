@@ -1,48 +1,98 @@
 #include <iostream>
+#include<sstream>
 #include "../Header/Text.h"
 
-
-//construtor
-Text::Text( Window &window,
-            int font_size,
-            const std::string &messenge_text,
-            const SDL_Color &color):
-Window(window)
+Text::Text(Window &window,int size):
+Window(window),_size(size)
 {
-    _text_texture = loadFont(_renderer,_font_path,font_size,messenge_text,color);
-    SDL_QueryTexture(_text_texture,NULL,NULL,&_text_rect.w,&_text_rect.h);
+    _error = init("");
+    _start = true;
 }
-Text::Text( const Window &window,
-            const std::string &font_path, 
-            int font_size,
-            const std::string &messenge_text,
-            const SDL_Color &color):
-Window(window),_font_path(_font_path)
+Text::Text(Window &window,int size,char* font_path):
+Window(window),_size(size),_font_path(font_path)
 {
-    _text_texture = loadFont(_renderer,_font_path,font_size,messenge_text,color);
-    SDL_QueryTexture(_text_texture,NULL,NULL,&_text_rect.w,&_text_rect.h);
+    _error = init("");
+    _start = true;
+}
+Text::~Text(){
+    SDL_FreeSurface(_surface);
+    SDL_DestroyTexture(_texture);
+}
+//inicializador
+bool Text::init(const char* text){
+    if(!_start){
+        _font = TTF_OpenFont(_font_path.c_str(), _size);
+        if(_font == NULL){
+            std::cerr << "Failed to load Font!\n";
+            return true;
+        }
+    }
+    if(text != _text && !_error){
+        _text = text;
+        _surface = TTF_RenderText_Blended(_font, text, _color);
+        if(_surface == NULL){
+            std::cerr << "Failed to create Serface!\n";
+            return true;
+        }
+        _texture = SDL_CreateTextureFromSurface(_renderer, _surface);
+        if(_texture == NULL){
+            std::cerr << "Failed to create Texture!\n";
+            return true;
+        }
+        _rect.w = _surface->w;
+        _rect.h = _surface->h;
+
+    }
+    return false;
+}
+void Text::Error(bool error){
+    if(_error){
+        _text = "error";
+        std::cout << "Text::error\n";
+    }
+
 }
 
-//display
-void Text::display(int x, int y){
-    _text_rect.x = x;
-    _text_rect.y = y;
-    SDL_RenderCopy(_renderer, _text_texture,NULL,&_text_rect);
+void Text::drawText(const char* text, int x, int y){
+    _error = init("");
+    _rect.x = x;
+    _rect.y = y;
+    SDL_RenderCopy(_renderer, _texture, nullptr, &_rect);
+    
 }
-//
-SDL_Texture *Text::loadFont(SDL_Renderer *renderer,const std::string &font_path, int font_size,const std::string &messenge_text,const SDL_Color &color){
-    TTF_Font *font = TTF_OpenFont(font_path.c_str(),font_size);    
-    if(!font){
-        std::cerr << "Falha em carregar a Fonte!\n";
+void Text::drawText(std::string &text, int x, int y){
+    _error = init(text.c_str());
+    _rect.x = x;
+    _rect.y = y;
+    SDL_RenderCopy(_renderer, _texture, nullptr, &_rect);
+    /*_text = text;
+    TTF_Font* font = TTF_OpenFont(_font_path.c_str(), _size);
+    if(font == NULL){
+        std::cerr << "Failed to load Font!\n";
     }
-    auto text_surface = TTF_RenderText_Solid(font,messenge_text.c_str(),color);
-    if(!text_surface){
-        std::cerr << "Failed to create Text_surface!\n";
+    SDL_Surface* surface = TTF_RenderText_Blended(font, _text.c_str(), _color);
+    if(surface == NULL){
+        std::cerr << "Failed to create Serface!\n";
     }
-    auto text_texture = SDL_CreateTextureFromSurface(renderer,text_surface);
-    if(!text_texture){
-         std::cerr << "Failed to create Text_texture!\n";
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(_renderer, surface);
+    if(texture == NULL){
+        std::cerr << "Failed to create Texture!\n";
     }
-    SDL_FreeSurface(text_surface);
-    return text_texture;
+    _rect = {x, y, surface->w, surface->h};
+    SDL_FreeSurface(surface);
+    SDL_RenderCopy(_renderer, texture, nullptr, &_rect);
+    SDL_DestroyTexture(texture);
+    */
 }
+void Text::drawText(int text, int x, int y){
+    std::string str = "";
+	str += std::to_string(text);
+    //char* a = str.c_str();
+
+    drawText(str,x,y);
+}
+//getter e setter
+double Text::getWidth(){return _rect.w;}
+double Text::getHeight(){return _rect.h;}
+void Text::setText(char* text){_text = text;}
+void Text::setColor(SDL_Color &color){_color = color;}

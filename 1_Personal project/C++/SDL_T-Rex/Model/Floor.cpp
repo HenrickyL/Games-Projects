@@ -6,7 +6,8 @@
 
 Floor::Floor(Window &window,double x, double y):
 Entitie(window,x,y)
-{   _w = window.getWidth()/_div;
+{   _type = "floor";
+    _w = window.getWidth()/_div;
     _h = window.getHeight() - y; 
 }
 
