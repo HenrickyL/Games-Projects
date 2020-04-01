@@ -59,7 +59,7 @@ void Window::setClosed(bool closed){
 void Window::pollEvents(){
     //atualiza os ticks
     _ticks++;
-    if(_ticks%10000 ==0 ) _time++;
+    if(_ticks%2000 ==0 ) _time++;
     //crio um evento
     SDL_Event event;
     if(SDL_PollEvent(&event)){

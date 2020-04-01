@@ -14,6 +14,7 @@ public:
     //getter e setter
 //Que estranha esse método
     static int _ticks; //contar tick no geral
+    bool _pause = false;
     void pollEvents(); // verificar eventos
     void clear() const; //
     inline bool isClosed() const {return _closed;}//getIsClossed

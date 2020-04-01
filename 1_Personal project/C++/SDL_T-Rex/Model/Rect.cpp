@@ -2,24 +2,24 @@
 #include "../Header/Rect.h"
 
 Rect::Rect(const Window &window, double x, double y):
-Window(window),_x(x),_y(y)
+Window(window),_x(x),_y(y),_window(window)
 {  
     _w = 20;
     _h = 20;
 }
 Rect::Rect(const Window &window, double x, double y, int border):
-Window(window),_x(x),_y(y), _border(border)
+Window(window),_x(x),_y(y), _border(border),_window(window)
 {  
     _w = 20;
     _h = 20;
 }
 Rect::Rect(const Window &window, int w, int h, double x, double y):
-Window(window), _w(w),_h(h),_x(x),_y(y)
+Window(window), _w(w),_h(h),_x(x),_y(y),_window(window)
 {
 }
 //sobrecarga
 Rect::Rect(const Window &window, int w, int h, double x, double y, int r, int g, int b, int a):
-    Window(window), _w(w),_h(h),_x(x),_y(y), _r(r),_g(g),_b(b),_a(a)
+    Window(window), _w(w),_h(h),_x(x),_y(y), _r(r),_g(g),_b(b),_a(a),_window(window)
 { 
 }
 void Rect::draw() const{

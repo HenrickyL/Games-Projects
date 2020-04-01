@@ -1,6 +1,6 @@
 #include <iostream>
 #include "../Header/Floor.h"
-#include <vector>
+#include "../Header/variable.h"
 
 
 
@@ -9,6 +9,9 @@ Entitie(window,x,y)
 {   _type = "floor";
     _w = window.getWidth()/_div;
     _h = window.getHeight() - y; 
+    //adicionar as listas
+    entities.push_back(this);
+    floors.push_back(this);
 }
 
 void Floor::render(){

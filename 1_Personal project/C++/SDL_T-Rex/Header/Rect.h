@@ -22,7 +22,9 @@ protected:
     std::string _type = "rect";
     int _border=1;
     int _w, _h;
+    double _vx=0.1,_vy=0.1;
     double _x, _y;
+    Window _window;
     int  _r = 0, _g = 0, _b = 255, _a = 255;
     //getter e setter
 };

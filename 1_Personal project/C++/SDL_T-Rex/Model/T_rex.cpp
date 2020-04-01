@@ -2,93 +2,111 @@
 #include <iostream>
 #include "../Header/T_rex.h"
 #include "../Header/Floor.h"
-#include "../Exec/main.cpp"
+#include  "../Header/variable.h"//"../Exec/main.cpp"
 #include <vector>
+/*
 template<typename Base, typename T>
 inline bool instanceof(const T*) {
    return std::is_base_of<Base, T>::value;
-}
+}*/
 
 
     //variaveis staticas
-//int T_REX::_ticks = 0;
+double T_REX::_posX=0;
 
 //construtor e destrutor por omissão são da pai
 T_REX::T_REX(Window &window, double x, double y): 
 Entitie(window,x,y)
-{   _type = "t_rex";
-    _w=22;
-    _h=30;
+{   _posX = x;
+    _type = "t_rex";
+    _vy = _impulse;
+    _w=35;
+    _h=50;
     this->status = -1; // em espera pra correr
-    this->dead = false;
+    this->_dead = false;
     this->color("red");
-    _x0=x-_w, _y0=y-_h;
+    int _x0=x-_w, _y0=y-_h;
     _x = _x0, _y = _y0;
+    _vx = 0.1;
+    //adicionando aos listas
+    t_rexs.push_back(this);
+    entities.push_back(this);
     std::cout<<"Dino criado!\n";
 }
 
 
-void T_REX::up(){
+void T_REX::tickUp(){
     if(status != -1 && status != 1){
         std::cout<<"Dino up\n";
         status = 1;
-        _vy = 0.2; //impulso
+        _vy = _impulse; //impulso
     }
     
     
 }
-void T_REX::down(){
+void T_REX::tickDown(){
     if(status != -1 && status != 2){
         std::cout<<"Dino abaixa\n";
         status = 2;
     }
 }
 void T_REX::start(){
-    std::cout << "start\n";
+    std::cout << "TREX::start!\n";
     status = 0;
 }
 
 void T_REX::tick(){
-    //_ticks++;
-    this->checkKey();
-    //atualizo sua posição
-    if(!dead && status != -1 && (_x+_w) < _width){
-        
-        if(Window::_ticks%10 ==0)_x+=_vx; // um tick de posição
-        if(isFree(_y +_g - _vy)) _y += _g-_vy;
-        //if(status == 1) _y -=_vy;
+    if(!_pause){
+        if( (Window::getTime() - _initTime) == 2 && status == -1) start();
+        //this->tickCheckKey();
+        //atualizo sua posição
+        tickPosIncrementation();
+        // aplico gravidade
+        tickApplyGravity();
     }
-    // aplico gravidade
-    applyGravity();
-    //Verifico o quanto correu
-    howMuchRun();
-    //converter status
+    
 }
 //complemento do tick
-void T_REX::howMuchRun(){
+/*void T_REX::howMuchRun(){
     if(this->status != -1 ){ //se não tiver começado
         this->run = this->_x - this->_x0;
         //std::cout<<"SCORE: "<<run<<"\n";
     }
-}
-void T_REX::applyGravity(){
-    if(!dead && status < 1 ){
-        _vy -= _g; 
-    }if(isFree(_y+_g-_vy)){
-        status = 0;
+}*/
+void T_REX::tickPosIncrementation(){
+    if(!_dead && status != -1 && (_x+_w) < _width && (_y+_h)<_height){
+            //X
+            _x+=_vx; // um tick de posição
+            _y +=_g - _vy;
+            //Y
+            /*if(isFree(_y +_g-_vy)){
+                _y += _g - _vy;
+                status = 1;
+            }    
+            else{
+                status = 0;
+            }*/
     }
 }
-void T_REX::checkKey(){
+void T_REX::tickApplyGravity(){
+    if(!_dead && status != -1 && _ticks%10 == 0){
+        _vy -= _g; 
+    }
+}
+void T_REX::tickCheckKey(){
     SDL_Event event;
+    if(SDL_PollEvent(&event) && event.type == SDL_QUIT){
+        setClosed(true);
+    }
     if(SDL_PollEvent(&event) && event.type == SDL_KEYDOWN){
         if(event.key.keysym.sym == SDLK_SPACE && status == -1){
             this->start();
         }else if(event.key.keysym.sym == SDLK_DOWN){
-            this->down();
+            this->tickDown();
         }else if(event.key.keysym.sym == SDLK_UP /*|| event.key.keysym.sym == SDLK_SPACE*/){
-            this->up();
+            this->tickUp();
         }
-    }else if(SDL_PollEvent(&event) && event.type == SDL_KEYUP){
+    }if(SDL_PollEvent(&event) && event.type == SDL_KEYUP){
         if(event.key.keysym.sym == SDLK_UP && status == 2){
             status = 0;
         }
@@ -99,11 +117,21 @@ void T_REX::render(){
     this->draw();
 }
 
-bool T_REX::isFree(int nextY){
-    for(int i =0;i<floors.size();i++){
-        Floor *f = floors.at(i);
-        if(this->intersect(*f) ){
-            return 0;
+bool T_REX::isFree(double nextY){
+    if(!floors.empty()){
+        double backY = this->_y;
+        this->_y = nextY;
+    
+        for(int i =0;i<floors.size();i++){
+            Floor *f = floors.at(i);
+            if(this->intersect(*f) ){
+                this->_y = backY;
+                return 0;
+                
+            }
         }
-    }return 1;
+    this->_y = backY;
+    }
+        
+    return 1;
 }

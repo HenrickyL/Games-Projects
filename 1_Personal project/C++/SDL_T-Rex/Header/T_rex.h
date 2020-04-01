@@ -7,25 +7,25 @@
 
 class T_REX : public Entitie{
 private: 
-	//int _ticks = 0;
-	int _x0,_y0;//iniciais
-	double _vx = 0.1 ,_vy=0;
+	static double _posX;
 	double _ymax = 30;
-	double _g = 0.1; //gravidade
+	double _g = 0.08; //gravidade
 	double _impulse = 1.5;
-	double _t=0; // tempo
 	int frames;
 	int frameCurrent;//frame atual
-	int status; // 0-normal, 1- pulando, 2- abaixado, -1  não começou
-	bool dead;
-	int run; // quantidade corrida (*se colocar mais de um dinossauro tem que trocar)
+	int status = -1; // 0-normal, 1- pulando, 2- abaixado, -1  não começou
+	bool _dead = false;
+	int run; // cada dinossauro corre uma quantidade
+	int _initTime = Window::getTime();
 	//metodos privados
-	void applyGravity();
-	void howMuchRun();
-	void checkKey();
-	void up(); //pular
-	void down(); //abaixar
-	bool isFree(int nextY);
+	void tickApplyGravity();
+	//void howMuchRun();
+	void tickCheckKey();
+	void tickUp(); //pular
+	void tickDown(); //abaixa
+	void tickPosIncrementation();
+
+	bool isFree(double nextY);
 
 public:
 	T_REX(Window &window , double x, double y); //Construtor Dinosauro
@@ -36,14 +36,17 @@ public:
 	void render(); //atualização gráfica
 	void start(); // dino pode correr
 	//getter e setter
+	static double getPosX(){return _posX;} 
 	bool getDead();
-	void setDead(bool live);
+	inline void setDead(bool dead){_dead = dead;};
 	int getStatus();
-	void setStatus(int status);
+	void setStatus(int status){this->status = status;};
 	double getVx();
 	void setVx(double vx);
 	double getVy();
 	double setVy(double vy);
+	double getImpulse(){return  _impulse;}
+	void setImpulse(double impulse){_impulse = impulse;}
 
 };
 
