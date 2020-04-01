@@ -6,7 +6,7 @@
 class OBSTC : public Entitie{
 private:
 	int _status = -1;
-	int _obs_type;// 1-7
+	int _obs_type;// 1-CactoPequeno(CP), 2 - CM 3- CG , 3 - Passaro(em alguma posição)
 	int timerFrames;
 	int FrameCurrent;
 	int _initTime;

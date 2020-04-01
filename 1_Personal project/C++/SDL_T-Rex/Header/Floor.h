@@ -15,8 +15,8 @@ public:
     
     //variaveis
 private:
-    double  _vx = 0.1;//0.1;
-    int     _div = 16; // numero de divisões em tela
+    double  _vx;
+    int     _div = 16; // numero de divisões em tela ou t
     bool    _start = false;
     
     //métodos privados
@@ -27,6 +27,7 @@ public:
     //getter e setter
     bool getStart()const{return _start;}
     void setStart(bool start){_start = start;}
+    int getDiv(){return _div;}
      
 
 };

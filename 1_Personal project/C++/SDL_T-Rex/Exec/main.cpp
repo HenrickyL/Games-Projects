@@ -3,15 +3,12 @@
 #include<sstream>
 #include "../Header/Window.h"
 #include "../Header/variable.h"
-//#include "../Model/variable.cpp"
 #include "../Header/T_rex.h"
 #include "../Header/Entitie.h"
 #include "../Header/Rect.h"
 #include "../Header/Floor.h"
 #include "../Header/Obstacle.h"
 #include "../Header/Text.h"
-
-#include <vector>
 
 /*terminal:
 	g++ main.cpp ../Model/Window.cpp  ../Model/Obstacle.cpp ../Model/T_rex.cpp ../Model/variable.cpp ../Model/Rect.cpp ../Model/Text.cpp ../Model/Entitie.cpp ../Model/Floor.cpp -o main -lSDL2 -lSDL2_ttf && ./main
@@ -27,7 +24,7 @@ int main(){
 	
 	for(int i=0;i < qtdFloor; i++){
 		Floor *f = new Floor(window, pos,yFloor);
-		pos+=window.getWidth()/16;
+		pos+=WIDTH/16;
 	}
 	//Floor 0
 	int atvFloor = -1;
@@ -40,10 +37,10 @@ int main(){
 	
 	//Floor floor(window,0 ,HEIGHT-H_Floor);
 	double imp;
-	std::cout<<"Quanto de impulso?\n";
-	std::cin >> imp;
-	T_REX dino(window,50,HEIGHT-H_Floor-50);
-	dino.setImpulse(imp);
+	//std::cout<<"Quanto de impulso?\n";
+	//std::cin >> imp;
+	T_REX *dino =  new T_REX(window,50,HEIGHT-H_Floor);
+	//dino->setVy(imp);
 	//loop do game
 	int backTime = Window::getTime();
 	while(!window.isClosed()){
@@ -66,9 +63,10 @@ int main(){
 			}
 			for(int i = 1; i < qtdFloor ; i++)(floors.at(i))->tick();
 		}
+		o1->tick();
+		o2->tick();
 
-		dino.tick();
-		dino.render();
+		dino->tick();
 		
 		
 		

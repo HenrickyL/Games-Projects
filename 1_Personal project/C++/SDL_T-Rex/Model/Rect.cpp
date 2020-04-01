@@ -1,26 +1,33 @@
 #include <iostream>
 #include "../Header/Rect.h"
 
+
+
+
 Rect::Rect(const Window &window, double x, double y):
 Window(window),_x(x),_y(y),_window(window)
 {  
-    _w = 20;
-    _h = 20;
+    _w=30;
+    _h=30;
 }
 Rect::Rect(const Window &window, double x, double y, int border):
 Window(window),_x(x),_y(y), _border(border),_window(window)
 {  
-    _w = 20;
-    _h = 20;
+    _w=30;
+    _h=30;
 }
 Rect::Rect(const Window &window, int w, int h, double x, double y):
-Window(window), _w(w),_h(h),_x(x),_y(y),_window(window)
+Window(window),_x(x),_y(y),_window(window)
 {
+    _w=w;
+    _h=h;
 }
 //sobrecarga
 Rect::Rect(const Window &window, int w, int h, double x, double y, int r, int g, int b, int a):
-    Window(window), _w(w),_h(h),_x(x),_y(y), _r(r),_g(g),_b(b),_a(a),_window(window)
+    Window(window), _x(x),_y(y), _r(r),_g(g),_b(b),_a(a),_window(window)
 { 
+    _w=w;
+    _h=h;
 }
 void Rect::draw() const{
     
@@ -45,7 +52,8 @@ void Rect::pollEvents(){//está ocorrendo algum evento?
     if(SDL_PollEvent(&event)){
         if(event.type == SDL_QUIT) setClosed(true);
         if(event.type == SDL_KEYDOWN){
-             switch (event.key.keysym.sym){
+            
+            switch (event.key.keysym.sym){
                     case SDLK_UP:
                         _y -= 10;
                         break;
@@ -80,6 +88,8 @@ void Rect::color(std::string cor){
         _r=0,_g=0,_b=0;
     }else if(cor == "green"){
         _r=0,_g=255,_b=0;
+    }else if(cor == "pink"){
+        _r=255,_g=182,_b=193;
     }else{
         std::cout<<"Cor Indefinido!\n";
     }
@@ -90,17 +100,14 @@ void Rect::color(int r, int g, int b){
 void Rect::alpha(int a){
     _a=a;
 }
-bool Rect::intersect(Rect B){
+bool Rect::intersect(Rect *B){
     //interação de retangulo A com B
-    int Ax0 = _x, Ay0 = _y;
-    int Ax = _x+_w,Ay = _y+_h;
-    int Bx0 = B._x, By0 = B._y;
-    int Bx = B._x+B._w,By = B._y+B._h;    
+    int Ax0 = this->_x, Ay0 = this->_y;
+    int Ax = this->_x+this->_w,Ay = this->_y+this->_h;
+    int Bx0 = B->_x, By0 = B->_y;
+    int Bx = B->_x+B->_w,By = B->_y+B->_h;    
     if(
-        Bx0 <= Ax && By0 <= Ay || // Canto infD_A C_supE_B
-        Bx0 <= Ax && By >= Ay0 || //C_infE_B C_supD_A
-        Bx >= Ax0 && By0 <= Ay || //C_supD_B  C_indEA
-        Bx >= Ax0 && By >= Ay0 //C_supE_A C_infD_B
+        Ax >= Bx0 && Ax0 <= Bx && Ay >= By0 && Ay0 <= By   
         ) return 1;
     else return 0;
 }

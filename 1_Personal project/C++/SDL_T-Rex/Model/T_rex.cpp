@@ -2,7 +2,7 @@
 #include <iostream>
 #include "../Header/T_rex.h"
 #include "../Header/Floor.h"
-#include  "../Header/variable.h"//"../Exec/main.cpp"
+#include "../Header/variable.h"
 #include <vector>
 /*
 template<typename Base, typename T>
@@ -12,19 +12,19 @@ inline bool instanceof(const T*) {
 
 
     //variaveis staticas
-double T_REX::_posX=0;
+
 
 //construtor e destrutor por omissão são da pai
 T_REX::T_REX(Window &window, double x, double y): 
 Entitie(window,x,y)
-{   _posX = x;
+{
     _type = "t_rex";
     _vy = _impulse;
-    _w=35;
-    _h=50;
+    _w=DINO_w;
+    _h=DINO_h;
     this->status = -1; // em espera pra correr
     this->_dead = false;
-    this->color("red");
+    this->color("black");
     int _x0=x-_w, _y0=y-_h;
     _x = _x0, _y = _y0;
     _vx = 0.1;
@@ -35,34 +35,39 @@ Entitie(window,x,y)
 }
 
 
-void T_REX::tickUp(){
+void T_REX::up(){
     if(status != -1 && status != 1){
         std::cout<<"Dino up\n";
         status = 1;
         _vy = _impulse; //impulso
+        color("yellow");
     }
     
     
 }
-void T_REX::tickDown(){
+void T_REX::down(){
     if(status != -1 && status != 2){
         std::cout<<"Dino abaixa\n";
         status = 2;
+        color("green");
     }
 }
 void T_REX::start(){
     std::cout << "TREX::start!\n";
     status = 0;
+    color("red");
 }
 
 void T_REX::tick(){
     if(!_pause){
-        if( (Window::getTime() - _initTime) == 2 && status == -1) start();
-        //this->tickCheckKey();
-        //atualizo sua posição
-        tickPosIncrementation();
+        //if( (Window::getTime() - _initTime) == 1 && status == -1) start();
+       
         // aplico gravidade
         tickApplyGravity();
+        //atualizo sua posição
+        tickPosIncrementation();
+        tickCheckKey();
+        
     }
     
 }
@@ -77,15 +82,15 @@ void T_REX::tickPosIncrementation(){
     if(!_dead && status != -1 && (_x+_w) < _width && (_y+_h)<_height){
             //X
             _x+=_vx; // um tick de posição
-            _y +=_g - _vy;
+            //_y +=_g - _vy;
             //Y
-            /*if(isFree(_y +_g-_vy)){
+            if(isFree(_y + _g -_vy)){
                 _y += _g - _vy;
-                status = 1;
             }    
-            else{
+            else if(status != 0){
                 status = 0;
-            }*/
+                color("red");
+            }
     }
 }
 void T_REX::tickApplyGravity(){
@@ -95,17 +100,17 @@ void T_REX::tickApplyGravity(){
 }
 void T_REX::tickCheckKey(){
     SDL_Event event;
-    if(SDL_PollEvent(&event) && event.type == SDL_QUIT){
-        setClosed(true);
-    }
+   // if(SDL_PollEvent(&event) && event.type ==SDL_QUIT) setClosed(true);
     if(SDL_PollEvent(&event) && event.type == SDL_KEYDOWN){
-        if(event.key.keysym.sym == SDLK_SPACE && status == -1){
-            this->start();
-        }else if(event.key.keysym.sym == SDLK_DOWN){
-            this->tickDown();
-        }else if(event.key.keysym.sym == SDLK_UP /*|| event.key.keysym.sym == SDLK_SPACE*/){
-            this->tickUp();
+        if(status == -1) this->start();
+        if(event.key.keysym.sym == SDLK_DOWN){
+            std::cout << "Dino : up!\n";
+            this->down();
+        }else if(event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_SPACE){
+            this->up();
+            std::cout << "Dino : Down!\n";
         }
+        
     }if(SDL_PollEvent(&event) && event.type == SDL_KEYUP){
         if(event.key.keysym.sym == SDLK_UP && status == 2){
             status = 0;
@@ -124,14 +129,13 @@ bool T_REX::isFree(double nextY){
     
         for(int i =0;i<floors.size();i++){
             Floor *f = floors.at(i);
-            if(this->intersect(*f) ){
+            if(this->intersect(f) ){
                 this->_y = backY;
                 return 0;
                 
             }
         }
     this->_y = backY;
-    }
-        
+    }        
     return 1;
 }

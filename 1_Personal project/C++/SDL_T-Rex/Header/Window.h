@@ -16,13 +16,14 @@ public:
     static int _ticks; //contar tick no geral
     bool _pause = false;
     void pollEvents(); // verificar eventos
-    void clear() const; //
+    void clear(); //
     inline bool isClosed() const {return _closed;}//getIsClossed
     void setClosed(bool closed);
     void color(std::string cor);
     void drawText(const char *text, int x, int y);
 private:
     bool init(); // criar a janela
+    void upgradeVar();
      
 private: //atributos
     std::string _title = "Title"; //titulo

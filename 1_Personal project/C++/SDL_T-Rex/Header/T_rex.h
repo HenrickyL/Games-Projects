@@ -2,12 +2,10 @@
 #ifndef TREX_H
 #define TREX_H
 #include "Entitie.h"
-#include <vector>
 
 
 class T_REX : public Entitie{
 private: 
-	static double _posX;
 	double _ymax = 30;
 	double _g = 0.08; //gravidade
 	double _impulse = 1.5;
@@ -21,8 +19,8 @@ private:
 	void tickApplyGravity();
 	//void howMuchRun();
 	void tickCheckKey();
-	void tickUp(); //pular
-	void tickDown(); //abaixa
+	void up(); //pular
+	void down(); //abaixa
 	void tickPosIncrementation();
 
 	bool isFree(double nextY);
@@ -35,16 +33,15 @@ public:
 	void tick(); // atualizações atributos
 	void render(); //atualização gráfica
 	void start(); // dino pode correr
-	//getter e setter
-	static double getPosX(){return _posX;} 
+	//getter e setter 
 	bool getDead();
 	inline void setDead(bool dead){_dead = dead;};
 	int getStatus();
 	void setStatus(int status){this->status = status;};
 	double getVx();
 	void setVx(double vx);
-	double getVy();
-	double setVy(double vy);
+	double getVy(){return _vy;}
+	void setVy(double vy){_vy = vy;}
 	double getImpulse(){return  _impulse;}
 	void setImpulse(double impulse){_impulse = impulse;}
 

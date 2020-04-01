@@ -9,6 +9,7 @@ Entitie(window,x,y), _obs_type(type)
 {  
     //verifico o tipo e organizo a posição
     generateType(type);
+    _vy = 0;
     _x = x - _w;
     _y = y - _h;
     this->color("green");
@@ -23,11 +24,11 @@ Entitie(window,x,y), _obs_type(type)
 void OBSTC::start(){
     std::cout << "OBST::start!\n";
     _status = 0;
-    _initTime = Window::getTime();
 }
 //Tick
 void OBSTC::tick(){
     if(!_pause){
+       if((Window::getTime() - _initTime) == 1 && _status == -1 )start();
         tickSpeedIncrementation();
         tickPosIncrementation();
         tickColid();
@@ -48,12 +49,13 @@ void OBSTC::tickColid(){
     if(_status != -1 && !t_rexs.empty()){
         for(int i = 0; i< t_rexs.size();i++){
             T_REX *t = t_rexs.at(i);
-            if(this->intersect(*t)){
+            if(this->intersect(t)){
                 t->setDead(true); //para o dinossauro
                 t->setStatus(-1);
+                t->color("pink");
                 _status = -1;
-                if(!_RNTest){ //se não tiver usando a rede neural
-                    for(int j = 0; j < entities.size(); j++){ //Parar todo mundo
+                if(_RNTest == false){ //se não tiver usando a rede neural
+                    for(int j = 0; j < obstacles.size(); j++){ //Parar todo mundo
                         OBSTC *o = obstacles.at(i);
                         o->setStatus(-1);
                     }
@@ -64,17 +66,26 @@ void OBSTC::tickColid(){
     }
 }
 void OBSTC::tickSpeedIncrementation(){
-    if(_status != -1 && (Window::getTime()-_initTime)%10 ==0){
-        _vx *= 1.1; 
+    if(_status != -1 && (Window::getTime()-_initTime)%10 == 0 && _vy<Spd_max){
+        std::cout << "upSpeed!\n";
+        //_vx *= 1.1; 
     }
 }
 //gerador de tipos
 void OBSTC::generateType(int type){
-    if(_obs_type == 1){
-        _w=25;
-        _h=30;
-    }else if(_obs_type == 2){
-        _w=30;
-        _h=40;
+    if(_obs_type == 1){ // cacto pequeno
+        _w=OBS1_w;
+        _h=OBS1_h;
+    }else if(_obs_type == 2){ // cacto medio
+        _w=OBS2_w;
+        _h=OBS2_h;
+    }else if(_obs_type == 3){ // cacto grande
+        _w = OBS3_w;
+        _h = OBS3_h;
+
+    }else if(_obs_type == 4){ // passaro
+        _w = OBS4_w;
+        _h = OBS4_h;
+
     }
 }

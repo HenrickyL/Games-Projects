@@ -56,10 +56,12 @@ bool Window::init(){
 void Window::setClosed(bool closed){
     _closed = closed;
 }
-void Window::pollEvents(){
+void Window::upgradeVar(){
     //atualiza os ticks
     _ticks++;
     if(_ticks%2000 ==0 ) _time++;
+}
+void Window::pollEvents(){
     //crio um evento
     SDL_Event event;
     if(SDL_PollEvent(&event)){
@@ -68,7 +70,8 @@ void Window::pollEvents(){
     
 }
 
-void Window::clear() const{
+void Window::clear(){
+    upgradeVar();
     SDL_RenderPresent(_renderer);
     SDL_SetRenderDrawColor(_renderer,_R,_G,_B,_A);
     SDL_RenderClear(_renderer);
@@ -87,8 +90,8 @@ void Window::color(std::string cor){
         _R=255,_G=255,_B=0;
     }else if(cor == "green"){
         _R=0,_G=255,_B=0;
-    }else{
-        
+    }else if(cor == "pink"){
+        _R=255,_G=182,_B=193;
     }
 }
 

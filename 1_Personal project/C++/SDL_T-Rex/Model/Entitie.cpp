@@ -15,6 +15,11 @@ Rect(window,w,h,x,y),_window(window)
 { 
     _r=255,_g=255,_b=0;
 }
+void Entitie::render(){
+    this->draw();
+}
+
+
 
 //métodos getter e setter
 

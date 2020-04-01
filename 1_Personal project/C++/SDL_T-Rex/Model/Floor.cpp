@@ -7,6 +7,7 @@
 Floor::Floor(Window &window,double x, double y):
 Entitie(window,x,y)
 {   _type = "floor";
+    _vx = Spd_Floor_OBS;
     _w = window.getWidth()/_div;
     _h = window.getHeight() - y; 
     //adicionar as listas
