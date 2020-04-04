@@ -6,7 +6,7 @@
 
 class Floor : public Entitie{
 public:
-    Floor(Window &window,double x, double y); 
+    Floor(Window *window,double x, double y); 
     
     
     //métodos

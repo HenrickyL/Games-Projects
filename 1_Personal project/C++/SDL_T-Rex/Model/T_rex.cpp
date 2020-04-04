@@ -15,7 +15,7 @@ inline bool instanceof(const T*) {
 
 
 //construtor e destrutor por omissão são da pai
-T_REX::T_REX(Window &window, double x, double y): 
+T_REX::T_REX(Window *window, double x, double y): 
 Entitie(window,x,y)
 {
     _type = "t_rex";
@@ -39,6 +39,7 @@ void T_REX::up(){
     if(status != -1 && status != 1){
         std::cout<<"Dino up\n";
         status = 1;
+        _h=DINO_h; // tamanho normal
         _vy = _impulse; //impulso
         color("yellow");
     }
@@ -48,6 +49,7 @@ void T_REX::up(){
 void T_REX::down(){
     if(status != -1 && status != 2){
         std::cout<<"Dino abaixa\n";
+        _h=DINO_h*0.6; // tamanho cai
         status = 2;
         color("green");
     }
@@ -61,7 +63,9 @@ void T_REX::start(){
 void T_REX::tick(){
     if(!_pause){
         //if( (Window::getTime() - _initTime) == 1 && status == -1) start();
-       
+        if(status != 2){//abaixado
+            _h=DINO_h;
+        }   
         // aplico gravidade
         tickApplyGravity();
         //atualizo sua posição

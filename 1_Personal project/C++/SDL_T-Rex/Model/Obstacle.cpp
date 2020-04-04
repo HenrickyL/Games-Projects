@@ -4,7 +4,7 @@
 #include "../Header/T_rex.h"
 
 
-OBSTC::OBSTC(Window &window, double x, double y, int type):
+OBSTC::OBSTC(Window *window, double x, double y, int type):
 Entitie(window,x,y), _obs_type(type)
 {  
     //verifico o tipo e organizo a posição
@@ -23,12 +23,11 @@ Entitie(window,x,y), _obs_type(type)
 //start
 void OBSTC::start(){
     std::cout << "OBST::start!\n";
-    _status = 0;
+    _start = true;
 }
 //Tick
 void OBSTC::tick(){
     if(!_pause){
-       if((Window::getTime() - _initTime) == 1 && _status == -1 )start();
         tickSpeedIncrementation();
         tickPosIncrementation();
         tickColid();
@@ -41,23 +40,23 @@ void OBSTC::render(){
 
 //funções auxiliares da função tick
 void OBSTC::tickPosIncrementation(){
-    if(_status != -1){
+    if(_start){
         _x -= _vx;
     }
 }
 void OBSTC::tickColid(){
-    if(_status != -1 && !t_rexs.empty()){
+    if(_start && !t_rexs.empty()){
         for(int i = 0; i< t_rexs.size();i++){
             T_REX *t = t_rexs.at(i);
             if(this->intersect(t)){
                 t->setDead(true); //para o dinossauro
                 t->setStatus(-1);
                 t->color("pink");
-                _status = -1;
+                _start = false;
                 if(_RNTest == false){ //se não tiver usando a rede neural
                     for(int j = 0; j < obstacles.size(); j++){ //Parar todo mundo
                         OBSTC *o = obstacles.at(i);
-                        o->setStatus(-1);
+                        o->setStart(false);
                     }
                 }
                 
@@ -66,7 +65,7 @@ void OBSTC::tickColid(){
     }
 }
 void OBSTC::tickSpeedIncrementation(){
-    if(_status != -1 && (Window::getTime()-_initTime)%10 == 0 && _vy<Spd_max){
+    if(_start && (Window::getTime()-_initTime)%10 == 0 && _vy<Spd_max){
         std::cout << "upSpeed!\n";
         //_vx *= 1.1; 
     }

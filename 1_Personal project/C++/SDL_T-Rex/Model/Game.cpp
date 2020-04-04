@@ -3,6 +3,17 @@
 #include <iostream>
 #include <random>
 #include "../Header/Game.h"
+///////////////////// interfaceof
+        //USO:  instanceof<CLASS>(OBJECT)
+template<typename Base, typename T>
+inline bool instanceof(const T*) {
+   return std::is_base_of<Base, T>::value;
+}
+
+////////////////////
+
+
+
 
 Game::Game(bool RN):
 _RN(RN)
@@ -14,11 +25,18 @@ _RN(RN)
     generateFloor();
     generateObstacle();
     generateT_rex();
+    std::cout << "<GAME :: Create!>\n";
 }
 Game::Game()
 {
     //inicalizar variaveis
     init();
+     //geradores
+    generateWindow();
+    generateFloor();
+    generateObstacle();
+    generateT_rex();
+    std::cout << "<GAME :: Create!>\n";
 }
 
 Game::~Game(){
@@ -33,9 +51,9 @@ Game::~Game(){
 void Game::tick(){
     if(!_window->_pause){
         //tick das entidades
-
+        tickEntities();
         //calculadores ou verificadores
-    
+        tickCalcScore();
     }
 } 
 void Game::render(){ //ordem de renderização importa
@@ -50,19 +68,26 @@ void Game::render(){ //ordem de renderização importa
 ////////////////////////////////////////////////////////////////////////////////////
 void Game::start(){
     _runing = true;
-    std::cout << "<Game Start!>\n";
-    //loop
     while(_runing){
+        this->keyEvents();
+        //ticks
+        this->tick();
+        //renders
+        this->render();
+        //limpar tela
+        _window->clear();
 
-    }stop();
+    }
 } 
 void Game::pause(){
-    _window->_pause = true;
+    if(_window->_pause) _window->_pause = false;
+    else _window->_pause = true;
 
 }
 void Game::stop(){
     std::cout << "<Game Stop!>\n";
     _runing = false;
+    _window->setClosed(true); //fecha janela
 
 } 
 
@@ -72,17 +97,39 @@ void Game::stop(){
      _qtdObstacles = QTD_OBSTACLES;
      _qtdFloor; // * com base na quantidade de obstaculos
  }
+ void Game::initStart(){
+    _start = true; // para a verificações de keys
+    //startar o dino e todos os outros
+        //startar Floor
+        int i;
+        for(i=0;i<floors.size();i++){
+            floors.at(i)->setStart(true);
+        }
+        //startar Obstacles
+        for(i=0;i<obstacles.size();i++){
+            obstacles.at(i)->setStart(true);
+        }
+        //startar Dino
+        for(i=0;i<t_rexs.size();i++){
+            t_rexs.at(i)->setStatus(0);
+        }
+    std::cout << "<Game Start!>\n";
+ }
 //Geradores:
 void Game::generateWindow(){
     _window = new Window(title, WIDTH,HEIGHT);
     if(_window == nullptr) std::cerr << "<Falha em criar janela!>\n";
+    else std::cerr << "<GAME:: Create Window!>\n";
 }
 void Game::generateFloor(){
     int pos=0;
     for(int i=0;i < _qtdFloor;i++){
-        Floor *f = new Floor(*_window,pos,yFloor);
+        Floor *f = new Floor(_window,pos,yFloor);
         pos+= _window->getWidth()/f->getDiv();
     }
+    if(floors.empty()){
+        std::cerr << "<Falha ao Criar o Chão!>\n";
+    }else std::cerr << "<GAME:: Create Floor!>\n";
 }
 void Game::generateT_rex(){
     int qtd;
@@ -92,8 +139,11 @@ void Game::generateT_rex(){
         qtd =1;
     }
     for(int i = 0 ; i < qtd ; i++){
-        T_REX *t = new T_REX(*_window,50,HEIGHT-H_Floor);
+        T_REX *t = new T_REX(_window,50,HEIGHT-H_Floor);
     }
+    if(t_rexs.empty()){
+        std::cerr << "<Falha ao Criar o(s) Dinossauro(s)!>\n";
+    }else std::cerr << "<GAME:: Create T_REX!>\n";
 }
 void Game::generateObstacle(){ 
     _obsPositions = new int[_qtdObstacles];
@@ -101,13 +151,18 @@ void Game::generateObstacle(){
     srand (time(NULL)); //semente
     int type = rand() % 4 + 1; // de 1 a 4
     int  y = yFloor;
-    if(type == 4){
+    if(type == 4){//colocar nas posições adequadas 
         
     }
 
     for(int i =0; i< QTD_OBSTACLES; i++){
-        OBSTC *o = new OBSTC(*_window,_obsPositions[i],yFloor, type);
+        OBSTC *o = new OBSTC(_window,_obsPositions[i],yFloor, type);
     }
+    //verificar de erro
+    if(obstacles.empty()){
+        std::cerr << "<Falha ao Criar Obstaculos!>\n";
+    }else std::cerr << "<GAME:: Create Window!>\n";
+
 }
 void Game::randomGenerate(int *pos, int len, int initPos, int distMin){
     //gerador aleatório(tipo) de obstáculos com distância minima entre eles
@@ -145,6 +200,44 @@ void Game::destroyObstacle(){
         delete obstacles.at(i);
     }
 } 
+//Atualizadores /////////////////////////////////////////////////////////////////
+void Game::tickEntities(){
+    int i;
+    for(i =0;i<entities.size();i++){
+        //o método tick so deve ocorrer se a entidade estiver viva, logo retiro ele o entities
+        Entitie *e = entities.at(i);
+        e->tick();
+        if(instanceof<T_REX>(e)){
+            for(i=0;i<t_rexs.size();i++){
+                T_REX *t = t_rexs.at(i);
+                //Verificar se o Dinossauro morreu para retirar
+                if(e == t && t->isDead()){
+                    //troco o elemento com o ultimo
+                    Entitie *aux = entities.at(entities.size()-1);
+                    entities.at(entities.size()-1) = entities.at(i);
+                    entities.at(i) = aux;
+                    //salvo seu score
+                    t->setRun(t->getX() - floors.at(0)->getX());
+                    //retiro o ultimo
+                    entities.pop_back();
+                }
+            }
+        }
+        
+    }
+    //verificar os dinos vivos
+    for(i=0;i<t_rexs.size();i++){
+        T_REX *t = t_rexs.at(i);
+        if(t->isDead()){
+            T_REX *aux = t_rexs.at(t_rexs.size()-1);
+            t_rexs.at(t_rexs.size()-1) = t_rexs.at(i);
+            t_rexs.at(i) = aux;
+        }
+    }
+}
+void Game::tickCalcScore(){
+    _score = t_rexs.at(0)->getX() - floors.at(0)->getX();
+}
 
 
 //Renderizadores: ///////////////////////////////////////////////////////////////
@@ -164,7 +257,43 @@ void Game::renderObstacle(){
     }
 
 }
-//calculadores: //////////////////////////////////////////////////////////////////////
-void Game::CalcScore(){
-
+//KeyEvents ///////////////////////////////////////
+void Game::keyEvents(){
+    
+    //eventos
+    SDL_Event event;
+    if(SDL_PollEvent(&event)){
+        if(event.type == SDL_QUIT){
+            this->stop();
+        }
+        if(event.type == SDL_KEYDOWN){
+            if(!_start && event.key.keysym.sym == SDLK_SPACE){
+                this->initStart();
+            }else if(_start){
+                switch (event.key.keysym.sym){
+                case SDLK_ESCAPE: //ESQ
+                    this->pause();
+                    break;
+                case SDLK_UP:
+                    if(!_RN){
+                        t_rexs.at(0)->up();
+                    }
+                    break;
+                case SDLK_SPACE:
+                    if(!_RN){
+                        t_rexs.at(0)->up();
+                    }
+                    break;
+                case SDLK_DOWN:
+                    if(!_RN){
+                        t_rexs.at(0)->down();
+                    }
+                    break;
+                default:
+                    break;
+                }
+            }
+        }
+    }
+    
 }

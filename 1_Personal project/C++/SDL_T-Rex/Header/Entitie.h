@@ -8,7 +8,7 @@
 
 class Entitie : public Rect {
 protected:
-	Window _window;
+	int _initTime = Window::getTime();
 	//atributos
 	
 	//sprite
@@ -18,8 +18,8 @@ protected:
 
 public:
 	//Entitie(const Window &window);
-	Entitie(Window &window , double x, double y);
-	Entitie(Window &window , int w, int h, double x, double y); //Construtor Dinosauro
+	Entitie(Window *window , double x, double y);
+	Entitie(Window *window , int w, int h, double x, double y); //Construtor Dinosauro
 	//~Entitie();//Destrutor
 	
 	//Métodos

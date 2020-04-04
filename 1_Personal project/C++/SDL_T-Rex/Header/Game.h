@@ -21,13 +21,14 @@ public:
     ~Game();
     void tick();                //fazer todas as alterações
     void render();              //mostrar na tela
-    void start();               //dar inicio, game loop, ...
+    void start();               // game loop
     void pause();               //pausar
     void stop();                // parar de vez
 
 private://métodos privados
     //inicializador
     void init();                // inicializa as variáveis
+    void initStart();           // inicializar variaveis pos game loop
     //geradores
     void generateWindow();      // criar o ponteiro para a janela
     void generateFloor();       // cria o chão com base no tamanho
@@ -41,22 +42,28 @@ private://métodos privados
     void destroyT_rex();        // destroi todos os dinossauros
     void destroyObstacle();     // destroi todos os obstaculos
     
+    //Atualizadores das entidades
+    void tickEntities();        //atualização das entidades    
+    void tickCalcScore();          // verifica o scorea atual com base no percorrido
     //renderizadores
     void renderT_rex();
     void renderFloor();
     void renderObstacle();
-    //caldulador    
-    void CalcScore();          // verifica o scorea atual com base no percorrido
+    void renderPause();
+    //Eventos:
+    void keyEvents();
+    
 
 private:
+    bool        _start=false;   // Estado de o jogo ter iniciado
     Window      *_window;       // ponteiro para a janela criada
     Text        *_text;         // ponteiro para o gerador de texto
     bool        _runing = false;// variavel do game loop
-    int         score = 0;      //contador
+    int         _score = 0;      //contador
     bool        _RN = false;    //é para rede neural?
     //RN
-    int         _qtdDino;       // Quantidade de dinossauros
-    int         _qtdFloor;      // Quantidade de Chão
+    int         _qtdDino = 1;       // Quantidade de dinossauros
+    int         _qtdFloor = 16;      // Quantidade de Chão
     int         _qtdObstacles;  // Quantidade de Obstaculos
     int        *_obsPositions;  // vetor de posições dos obstaculos
     int         _obsMinDist;    // Distância minima entre obstaculos 

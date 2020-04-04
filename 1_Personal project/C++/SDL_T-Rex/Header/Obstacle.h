@@ -5,7 +5,7 @@
 
 class OBSTC : public Entitie{
 private:
-	int _status = -1;
+	bool _start = false;
 	int _obs_type;// 1-CactoPequeno(CP), 2 - CM 3- CG , 3 - Passaro(em alguma posição)
 	int timerFrames;
 	int FrameCurrent;
@@ -13,8 +13,8 @@ private:
 	bool _RNTest = false; //uso em Rede Neural
 	//sprite
 public:
-	OBSTC(Window &window, double x, double y, int type);
-	~OBSTC();
+	OBSTC(Window *window, double x, double y, int type);
+	//~OBSTC();
 	
 	//métodos
 	void start();
@@ -30,8 +30,8 @@ public:
 	//getter e setter
 	void setVx(double vx){_vx = vx;}
 	double getVx(){return _vx;}
-	int getStatus(){return _status;}
-	void setStatus(int status){_status = status;}
+	int getStart(){return _start;}
+	void setStart(int start){_start = start;}
 
 };
 

@@ -4,27 +4,27 @@
 
 
 
-Rect::Rect(const Window &window, double x, double y):
-Window(window),_x(x),_y(y),_window(window)
+Rect::Rect(Window *window, double x, double y):
+Window(*window),_x(x),_y(y),_window(window)
 {  
     _w=30;
     _h=30;
 }
-Rect::Rect(const Window &window, double x, double y, int border):
-Window(window),_x(x),_y(y), _border(border),_window(window)
+Rect::Rect(Window *window, double x, double y, int border):
+Window(*window),_x(x),_y(y), _border(border),_window(window)
 {  
     _w=30;
     _h=30;
 }
-Rect::Rect(const Window &window, int w, int h, double x, double y):
-Window(window),_x(x),_y(y),_window(window)
+Rect::Rect(Window *window, int w, int h, double x, double y):
+Window(*window),_x(x),_y(y),_window(window)
 {
     _w=w;
     _h=h;
 }
 //sobrecarga
-Rect::Rect(const Window &window, int w, int h, double x, double y, int r, int g, int b, int a):
-    Window(window), _x(x),_y(y), _r(r),_g(g),_b(b),_a(a),_window(window)
+Rect::Rect(Window *window, int w, int h, double x, double y, int r, int g, int b, int a):
+    Window(*window), _x(x),_y(y), _r(r),_g(g),_b(b),_a(a),_window(window)
 { 
     _w=w;
     _h=h;
@@ -46,11 +46,12 @@ void Rect::draw() const{
     SDL_SetRenderDrawColor(_renderer,_r,_g,_b,_a);
     SDL_RenderFillRect(_renderer,&rect);
 }
-void Rect::pollEvents(){//está ocorrendo algum evento?
+void Rect::keyEvents(){//está ocorrendo algum evento?
     //crio um evento
+    pollEvents();
     SDL_Event event;
     if(SDL_PollEvent(&event)){
-        if(event.type == SDL_QUIT) setClosed(true);
+        //if(event.type == SDL_QUIT) setClosed(true);
         if(event.type == SDL_KEYDOWN){
             
             switch (event.key.keysym.sym){
