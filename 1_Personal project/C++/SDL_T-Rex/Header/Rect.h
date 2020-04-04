@@ -13,6 +13,7 @@ public:
     void draw() const; // desenhar o retangulo na tela
     void color(std::string cor); // mudar cor usando string
     void color(int r, int g, int b); // mudar cor
+
     void alpha(int a); // mudar alpha da cor
     bool intersect(Rect *B); // verificar contato de retangulos
     void setX(double x){_x = x;}
@@ -26,7 +27,11 @@ protected:
     double _x, _y;
     Window *_window;
     int  _r = 0, _g = 0, _b = 255, _a = 255;
+    
+public:
     //getter e setter
+    SDL_Color getColor();
+    std::string getColorStr();
 };
 
 

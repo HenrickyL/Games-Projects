@@ -17,7 +17,7 @@ inline bool instanceof(const T*) {
 //construtor e destrutor por omissão são da pai
 T_REX::T_REX(Window *window, double x, double y): 
 Entitie(window,x,y)
-{
+{  
     _type = "t_rex";
     _vy = _impulse;
     _w=DINO_w;
@@ -25,13 +25,12 @@ Entitie(window,x,y)
     this->status = -1; // em espera pra correr
     this->_dead = false;
     this->color("black");
-    int _x0=x-_w, _y0=y-_h;
+    _x0=x-_w, _y0=y-_h;
     _x = _x0, _y = _y0;
     _vx = 0.1;
     //adicionando aos listas
     t_rexs.push_back(this);
     entities.push_back(this);
-    std::cout<<"Dino criado!\n";
 }
 
 
@@ -39,6 +38,7 @@ void T_REX::up(){
     if(status != -1 && status != 1){
         std::cout<<"Dino up\n";
         status = 1;
+        _y = _y0;
         _h=DINO_h; // tamanho normal
         _vy = _impulse; //impulso
         color("yellow");
@@ -49,6 +49,7 @@ void T_REX::up(){
 void T_REX::down(){
     if(status != -1 && status != 2){
         std::cout<<"Dino abaixa\n";
+        _y = _y0+DINO_h*0.4;
         _h=DINO_h*0.6; // tamanho cai
         status = 2;
         color("green");
@@ -62,10 +63,13 @@ void T_REX::start(){
 
 void T_REX::tick(){
     if(!_pause){
-        //if( (Window::getTime() - _initTime) == 1 && status == -1) start();
         if(status != 2){//abaixado
+            _y = _y0;
             _h=DINO_h;
-        }   
+        }
+        if(status == 0 && this->getColorStr() != "black"){
+            this->color("black");
+        }
         // aplico gravidade
         tickApplyGravity();
         //atualizo sua posição
@@ -75,13 +79,6 @@ void T_REX::tick(){
     }
     
 }
-//complemento do tick
-/*void T_REX::howMuchRun(){
-    if(this->status != -1 ){ //se não tiver começado
-        this->run = this->_x - this->_x0;
-        //std::cout<<"SCORE: "<<run<<"\n";
-    }
-}*/
 void T_REX::tickPosIncrementation(){
     if(!_dead && status != -1 && (_x+_w) < _width && (_y+_h)<_height){
             //X
@@ -133,10 +130,10 @@ bool T_REX::isFree(double nextY){
     
         for(int i =0;i<floors.size();i++){
             Floor *f = floors.at(i);
-            if(this->intersect(f) ){
+            if(this->intersect(f)){
                 this->_y = backY;
+                status = 0;
                 return 0;
-                
             }
         }
     this->_y = backY;

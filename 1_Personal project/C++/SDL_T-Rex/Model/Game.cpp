@@ -34,8 +34,9 @@ Game::Game()
      //geradores
     generateWindow();
     generateFloor();
-    generateObstacle();
     generateT_rex();
+    //generateObstacle();
+    
     std::cout << "<GAME :: Create!>\n";
 }
 
@@ -100,24 +101,32 @@ void Game::stop(){
  void Game::initStart(){
     _start = true; // para a verificações de keys
     //startar o dino e todos os outros
+        
+    int i;
+    if(!floors.empty()){
         //startar Floor
-        int i;
         for(i=0;i<floors.size();i++){
             floors.at(i)->setStart(true);
         }
+    }
+    if(!obstacles.empty()){
         //startar Obstacles
         for(i=0;i<obstacles.size();i++){
             obstacles.at(i)->setStart(true);
         }
+    }
+    if(!t_rexs.empty()){
         //startar Dino
         for(i=0;i<t_rexs.size();i++){
-            t_rexs.at(i)->setStatus(0);
+            t_rexs.at(i)->start(); // status -1 é inativo
         }
+    }
     std::cout << "<Game Start!>\n";
  }
 //Geradores:
 void Game::generateWindow(){
     _window = new Window(title, WIDTH,HEIGHT);
+    _window->color("white");
     if(_window == nullptr) std::cerr << "<Falha em criar janela!>\n";
     else std::cerr << "<GAME:: Create Window!>\n";
 }
@@ -207,7 +216,7 @@ void Game::tickEntities(){
         //o método tick so deve ocorrer se a entidade estiver viva, logo retiro ele o entities
         Entitie *e = entities.at(i);
         e->tick();
-        if(instanceof<T_REX>(e)){
+        /*if(instanceof<T_REX>(e)){
             for(i=0;i<t_rexs.size();i++){
                 T_REX *t = t_rexs.at(i);
                 //Verificar se o Dinossauro morreu para retirar
@@ -222,7 +231,7 @@ void Game::tickEntities(){
                     entities.pop_back();
                 }
             }
-        }
+        }*/
         
     }
     //verificar os dinos vivos
@@ -252,8 +261,10 @@ void Game::renderFloor(){
     }
 }
 void Game::renderObstacle(){
-    for(int i=0;i<obstacles.size();i++){
-        obstacles.at(i)->render();
+    if(!obstacles.empty()){
+        for(int i=0;i<obstacles.size();i++){
+            obstacles.at(i)->render();
+        }
     }
 
 }

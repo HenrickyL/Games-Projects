@@ -112,3 +112,27 @@ bool Rect::intersect(Rect *B){
         ) return 1;
     else return 0;
 }
+
+SDL_Color Rect::getColor(){
+    return {_r,_g,_b,_a};
+}
+std::string Rect::getColorStr(){
+    if(_r==0 && _g==0 &&_b==255){
+        return "blue";
+    }else if(_r==255 && _g==0 &&_b==0){
+        return "red";
+    }else if(_r==255 && _g==255 &&_b==255){
+        return "white";
+    }else if(_r==255 && _g==0 &&_b==0){
+        _r=255,_g=255,_b=0;
+        return "yellow";
+    }else if(_r==0 && _g==0 &&_b==0){
+        return "black";
+    }else if(_r==0 && _g==255 &&_b==0){
+        return "green";
+    }else if(_r==255 && _g==182 &&_b==193){
+        return "pink";
+    }else{
+        return "other";
+    }
+}

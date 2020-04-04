@@ -6,6 +6,7 @@
 
 class T_REX : public Entitie{
 private: 
+	double _x0,_y0;
 	double _ymax = 30;
 	double _g = 0.08; //gravidade
 	double _impulse = 1.5;

@@ -28,7 +28,7 @@ public:
 private://métodos privados
     //inicializador
     void init();                // inicializa as variáveis
-    void initStart();           // inicializar variaveis pos game loop
+    void initStart();           // inicializar variaveis pos game loop (ativador)
     //geradores
     void generateWindow();      // criar o ponteiro para a janela
     void generateFloor();       // cria o chão com base no tamanho
