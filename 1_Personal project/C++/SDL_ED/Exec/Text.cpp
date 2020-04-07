@@ -54,7 +54,7 @@ void Text::Error(bool error){
 }
 
 void Text::drawText(const char* text, int x, int y){
-    _error = init("");
+    _error = init("text");
     _rect.x = x;
     _rect.y = y;
     SDL_RenderCopy(_renderer, _texture, nullptr, &_rect);
@@ -84,13 +84,13 @@ void Text::drawText(std::string &text, int x, int y){
     SDL_DestroyTexture(texture);
     */
 }
-void Text::drawText(int text, int x, int y){
+/*void Text::drawText(int text, int x, int y){
     std::string str = "";
 	str += std::to_string(text);
     //char* a = str.c_str();
 
     drawText(str,x,y);
-}
+}*/
 //getter e setter
 double Text::getWidth(){return _rect.w;}
 double Text::getHeight(){return _rect.h;}

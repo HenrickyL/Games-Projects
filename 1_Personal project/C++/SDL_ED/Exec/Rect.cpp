@@ -118,9 +118,7 @@ bool Rect::intersect(Rect *B){
     else return 0;
 }
 
-SDL_Color Rect::getColor(){
-    return {_r,_g,_b,_a};
-}
+
 std::string Rect::getColorStr(){
     if(_r==0 && _g==0 &&_b==255){
         return "blue";

@@ -55,7 +55,7 @@ int QX_list::pop_back(){
         return aux->key;
         delete aux;       
 
-    }
+    }return -999;
 }
 int QX_list::at(int i){
     int index = 0;
@@ -120,16 +120,29 @@ void QX_list::draw(){
 void QX_list::drawNode(){
     //Desenho
     Node *aux = _head;
+    Rect *h;
     for(int i=0;i<_nodes.size();i++){
         Rect *r = _nodes.at(i);
         r->draw();
         //definir pontos
-        if(aux == _head){
-            //_text->drawText("H",r->getX()+_w/2,r->getY()+_h/2);
+        if(r->getType() == "*H"){
+            h = r;
+            Point p1;
+            p1.x = r->getX();
+            p1.y = _y+_h/3;
+            Point p2;
+            p2.x = r->getX()+_w+ this->size()*(_w+_drawNodeDist);
+            p2.y = _y+_h/3;
+            drawNodeL_Head(p1,p2);
+            p1.x = r->getX()+_w;
+            p2.x = r->getX()+_w+_drawNodeDist;
+            p2.y = _y+_h/3;
+            drawNode_Arrow(p1,p2);
+
         }
         
 
-        if(i != _nodes.size()-1 && r->getType() == "*"){
+        if(r->getType() == "*"){
             Point p1;
             p1.x = r->getX()+_w;
             p1.y = _y+_h/3;
@@ -137,6 +150,10 @@ void QX_list::drawNode(){
             p2.x = r->getX()+_w+_drawNodeDist;
             p2.y = _y+_h/3;
             drawNode_Arrow(p1,p2);
+            if(_nodes.size()-2 == i){
+                p2.x = h->getX();
+                drawNodeL_Last(p1,p2);
+            }
 
         }
         if(r->getType() == "*"){
@@ -155,7 +172,7 @@ void QX_list::draw_CreateNode(Node *node){
             int x = _window->getWidth()*0.05;
             Rect *pointerNodeHead = new Rect(_window,_w,_h,x,_y);
             pointerNodeHead->color("black");
-            pointerNodeHead->setType("*");
+            pointerNodeHead->setType("*H");
             _nodes.push_back(pointerNodeHead);
             Rect *nodeHead  = new Rect(_window,_w*0.6,_h,(x+_w*0.2),_y);
             nodeHead->color("pink");
@@ -193,25 +210,25 @@ void QX_list::drawNode_Arrow(Point p1, Point p2){
         SDL_RenderDrawLine(Window::_rendererS,p1.x+5,p1.y+5,p1.x,p1.y);
 }
 void QX_list::drawNodeL_Head(Point p1, Point p2){
+    p1.y += _h/3;
     SDL_SetRenderDrawColor(Window::_rendererS, 0, 0, 255, 255);
     //line back (p1)
-    SDL_RenderDrawLine(Window::_rendererS, (p1.x - _drawNodeDist),p1.y,p1.x,p1.y);
-    //line down
-    SDL_RenderDrawLine(Window::_rendererS, (p1.x - _drawNodeDist),p1.y,(p1.x - _drawNodeDist),p1.y-_h*2/3 );
-    //line right
-    SDL_RenderDrawLine(Window::_rendererS, (p1.x - _drawNodeDist),p1.y-_h*2/3, p2.x+_drawNodeDist,p2.y-_h*2/3);
-    //line up
-    SDL_RenderDrawLine(Window::_rendererS,p2.x+_drawNodeDist,p2.y-_h*2/3, p2.x+_drawNodeDist,p2.y);
-    //line back (p2)
-    SDL_RenderDrawLine(Window::_rendererS,p2.x+_drawNodeDist,p2.y,p2.x,p2.y);
+    SDL_RenderDrawLine(Window::_rendererS,  p1.x - _drawNodeDist,p1.y,p1.x,p1.y);
     //arrow
-    SDL_RenderDrawLine(Window::_rendererS,p2.x+5,p1.y-5,p2.x,p2.y);
-    SDL_RenderDrawLine(Window::_rendererS,p2.x+5,p1.y+5,p2.x,p2.y);
+    SDL_RenderDrawLine(Window::_rendererS,p1.x - _drawNodeDist +5,p1.y-5,p1.x - _drawNodeDist,p1.y);
+    SDL_RenderDrawLine(Window::_rendererS,p1.x - _drawNodeDist +5,p1.y+5,p1.x - _drawNodeDist,p1.y);
+    //line down
+    SDL_RenderDrawLine(Window::_rendererS, (p1.x - _drawNodeDist),p1.y,(p1.x - _drawNodeDist),p1.y+_h*2/3 );
+    //line right
+    SDL_RenderDrawLine(Window::_rendererS, (p1.x - _drawNodeDist),p1.y+_h*2/3, p2.x+_drawNodeDist,p1.y+_h*2/3);
+    //line up
+    SDL_RenderDrawLine(Window::_rendererS,p2.x+_drawNodeDist,p1.y+_h*2/3, p2.x+_drawNodeDist,p2.y+_h/3);
+    //line back (p2)
+    //SDL_RenderDrawLine(Window::_rendererS,p2.x+_drawNodeDist,p2.y,p2.x,p2.y);
+    
 }
 void QX_list::drawNodeL_Last(Point p1, Point p2){ //p1 para p2, meio que voltando
     SDL_SetRenderDrawColor(Window::_rendererS, 0, 0, 255, 255);
-    //line Right (p1)
-    SDL_RenderDrawLine(Window::_rendererS, p1.x,p1.y,(p1.x + _drawNodeDist),p1.y);
     //line up
     SDL_RenderDrawLine(Window::_rendererS,(p1.x + _drawNodeDist),p1.y,(p1.x + _drawNodeDist),(p1.y - _h*2/3));
     //line left
