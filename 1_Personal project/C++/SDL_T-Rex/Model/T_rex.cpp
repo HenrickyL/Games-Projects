@@ -56,7 +56,6 @@ void T_REX::down(){
     }
 }
 void T_REX::start(){
-    std::cout << "TREX::start!\n";
     status = 0;
     color("red");
 }
@@ -74,19 +73,18 @@ void T_REX::tick(){
         tickApplyGravity();
         //atualizo sua posição
         tickPosIncrementation();
-        tickCheckKey();
+        //tickCheckKey();
         
     }
     
 }
 void T_REX::tickPosIncrementation(){
-    if(!_dead && status != -1 && (_x+_w) < _width && (_y+_h)<_height){
+    if(!_dead && status != -1 &&  (_y+_h)<_height){
             //X
-            _x+=_vx; // um tick de posição
-            //_y +=_g - _vy;
+            //if((_x+_w) < _width ) _x+=_vx; // um tick de posição
             //Y
             if(isFree(_y + _g -_vy)){
-                _y += _g - _vy;
+                _y += +_g - _vy;
             }    
             else if(status != 0){
                 status = 0;
@@ -95,13 +93,13 @@ void T_REX::tickPosIncrementation(){
     }
 }
 void T_REX::tickApplyGravity(){
-    if(!_dead && status != -1 && _ticks%10 == 0){
+    if(!_dead && status != -1 && _ticks%2 == 0){
         _vy -= _g; 
     }
 }
 void T_REX::tickCheckKey(){
     SDL_Event event;
-   // if(SDL_PollEvent(&event) && event.type ==SDL_QUIT) setClosed(true);
+    if(SDL_PollEvent(&event) && event.type ==SDL_QUIT) setClosed(true);
     if(SDL_PollEvent(&event) && event.type == SDL_KEYDOWN){
         if(status == -1) this->start();
         if(event.key.keysym.sym == SDLK_DOWN){

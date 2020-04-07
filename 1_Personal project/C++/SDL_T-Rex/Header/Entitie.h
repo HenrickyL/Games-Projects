@@ -23,7 +23,7 @@ public:
 	//~Entitie();//Destrutor
 	
 	//Métodos
-	void tick();
+	virtual void tick();
 	void render();
 	
 	//getter e setter

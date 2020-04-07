@@ -50,6 +50,7 @@ Game::~Game(){
 
 // TICK e RENDER ////////////////////////////////////////////////////////////////
 void Game::tick(){
+    
     if(!_window->_pause){
         //tick das entidades
         tickEntities();
@@ -88,7 +89,7 @@ void Game::pause(){
 void Game::stop(){
     std::cout << "<Game Stop!>\n";
     _runing = false;
-    _window->setClosed(true); //fecha janela
+    Window::setClosed(true); //fecha janela
 
 } 
 
@@ -134,7 +135,7 @@ void Game::generateFloor(){
     int pos=0;
     for(int i=0;i < _qtdFloor;i++){
         Floor *f = new Floor(_window,pos,yFloor);
-        pos+= _window->getWidth()/f->getDiv();
+        pos+= _window->getWidth()/f->getDiv()-1;
     }
     if(floors.empty()){
         std::cerr << "<Falha ao Criar o Chão!>\n";
@@ -148,7 +149,7 @@ void Game::generateT_rex(){
         qtd =1;
     }
     for(int i = 0 ; i < qtd ; i++){
-        T_REX *t = new T_REX(_window,50,HEIGHT-H_Floor);
+        T_REX *t = new T_REX(_window,50,HEIGHT-H_Floor-100);
     }
     if(t_rexs.empty()){
         std::cerr << "<Falha ao Criar o(s) Dinossauro(s)!>\n";
@@ -212,36 +213,8 @@ void Game::destroyObstacle(){
 //Atualizadores /////////////////////////////////////////////////////////////////
 void Game::tickEntities(){
     int i;
-    for(i =0;i<entities.size();i++){
-        //o método tick so deve ocorrer se a entidade estiver viva, logo retiro ele o entities
-        Entitie *e = entities.at(i);
-        e->tick();
-        /*if(instanceof<T_REX>(e)){
-            for(i=0;i<t_rexs.size();i++){
-                T_REX *t = t_rexs.at(i);
-                //Verificar se o Dinossauro morreu para retirar
-                if(e == t && t->isDead()){
-                    //troco o elemento com o ultimo
-                    Entitie *aux = entities.at(entities.size()-1);
-                    entities.at(entities.size()-1) = entities.at(i);
-                    entities.at(i) = aux;
-                    //salvo seu score
-                    t->setRun(t->getX() - floors.at(0)->getX());
-                    //retiro o ultimo
-                    entities.pop_back();
-                }
-            }
-        }*/
-        
-    }
-    //verificar os dinos vivos
     for(i=0;i<t_rexs.size();i++){
-        T_REX *t = t_rexs.at(i);
-        if(t->isDead()){
-            T_REX *aux = t_rexs.at(t_rexs.size()-1);
-            t_rexs.at(t_rexs.size()-1) = t_rexs.at(i);
-            t_rexs.at(i) = aux;
-        }
+        t_rexs.at(i)->tick();
     }
 }
 void Game::tickCalcScore(){
@@ -308,3 +281,43 @@ void Game::keyEvents(){
     }
     
 }
+
+
+
+/*
+
+
+    for(i =0;i<entities.size();i++){
+        //o método tick so deve ocorrer se a entidade estiver viva, logo retiro ele o entities
+        Entitie *e = entities.at(i);
+        e->tick(); 
+        /*if(instanceof<T_REX>(e)){
+            for(i=0;i<t_rexs.size();i++){
+                T_REX *t = t_rexs.at(i);
+                //Verificar se o Dinossauro morreu para retirar
+                if(e == t && t->isDead()){
+                    //troco o elemento com o ultimo
+                    Entitie *aux = entities.at(entities.size()-1);
+                    entities.at(entities.size()-1) = entities.at(i);
+                    entities.at(i) = aux;
+                    //salvo seu score
+                    t->setRun(t->getX() - floors.at(0)->getX());
+                    //retiro o ultimo
+                    entities.pop_back();
+                }
+            }
+        }
+        
+    }
+    //verificar os dinos vivos
+    for(i=0;i<t_rexs.size();i++){
+        T_REX *t = t_rexs.at(i);
+        if(t->isDead()){
+            T_REX *aux = t_rexs.at(t_rexs.size()-1);
+            t_rexs.at(t_rexs.size()-1) = t_rexs.at(i);
+            t_rexs.at(i) = aux;
+        }
+    }
+
+
+*/

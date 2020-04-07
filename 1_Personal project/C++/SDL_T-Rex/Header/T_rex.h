@@ -8,8 +8,8 @@ class T_REX : public Entitie{
 private: 
 	double _x0,_y0;
 	double _ymax = 30;
-	double _g = 0.08; //gravidade
-	double _impulse = 1.5;
+	double _g = 0.1; //gravidade
+	double _impulse = 2;
 	int frames;
 	int frameCurrent;//frame atual
 	int status = -1; // 0-normal, 1- pulando, 2- abaixado, -1  não começou
@@ -29,7 +29,7 @@ public:
 	//~T_REX();//Destrutor
 	
 	//Métodos
-	void tick(); // atualizações atributos
+	void tick() override; // atualizações atributos
 	void render(); //atualização gráfica
 	void start(); // dino pode correr
 	void up(); //pular
