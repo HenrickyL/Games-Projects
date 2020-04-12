@@ -45,7 +45,18 @@ Game::~Game(){
     destroyFloor();
     destroyObstacle();
     destroyT_rex();
+    destroyTexts();
 }
+
+
+
+
+
+
+
+
+
+
 
 
 // TICK e RENDER ////////////////////////////////////////////////////////////////
@@ -66,7 +77,22 @@ void Game::render(){ //ordem de renderização importa
     //render de T_rex
     renderT_rex();
     //textos
+    renderScore();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ////////////////////////////////////////////////////////////////////////////////////
 void Game::start(){
     _runing = true;
@@ -98,6 +124,11 @@ void Game::stop(){
      _qtdDino = QTD_DINOS;
      _qtdObstacles = QTD_OBSTACLES;
      _qtdFloor; // * com base na quantidade de obstaculos
+     std::cerr << "Criando ScoreText ...\n";
+     //_scoreText = new Text(_window,30);
+     if(_scoreText == nullptr){
+         std::cerr << "Falha ao criar TextScore!\n";
+     }
  }
  void Game::initStart(){
     _start = true; // para a verificações de keys
@@ -210,6 +241,9 @@ void Game::destroyObstacle(){
         delete obstacles.at(i);
     }
 } 
+void Game::destroyTexts(){
+    delete _scoreText;
+}
 //Atualizadores /////////////////////////////////////////////////////////////////
 void Game::tickEntities(){
     int i;
@@ -241,6 +275,16 @@ void Game::renderObstacle(){
     }
 
 }
+
+void Game::renderScore(){
+    if(_scoreText != nullptr){
+        std::string str = "";
+	    str += std::to_string(_score);
+        _scoreText->drawText(str,WIDTH-1,2);
+    }
+    
+}
+
 //KeyEvents ///////////////////////////////////////
 void Game::keyEvents(){
     

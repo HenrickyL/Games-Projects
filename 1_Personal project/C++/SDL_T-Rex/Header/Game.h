@@ -41,6 +41,7 @@ private://métodos privados
     void destroyFloor();        // destroi todo o chão
     void destroyT_rex();        // destroi todos os dinossauros
     void destroyObstacle();     // destroi todos os obstaculos
+    void destroyTexts();        // Destroi todos os textos
     
     //Atualizadores das entidades
     void tickEntities();        //atualização das entidades    
@@ -50,23 +51,24 @@ private://métodos privados
     void renderFloor();
     void renderObstacle();
     void renderPause();
+    void renderScore();
     //Eventos:
     void keyEvents();
     
 
 private:
-    bool        _start=false;   // Estado de o jogo ter iniciado
-    Window      *_window;       // ponteiro para a janela criada
-    Text        *_text;         // ponteiro para o gerador de texto
-    bool        _runing = false;// variavel do game loop
-    int         _score = 0;      //contador
-    bool        _RN = false;    //é para rede neural?
+    bool        _start=false;           // Estado de o jogo ter iniciado
+    Window      *_window;               // ponteiro para a janela criada
+    Text        *_scoreText;            // ponteiro para o gerador de texto
+    bool        _runing = false;        // variavel do game loop
+    int         _score = 0;             // contador
+    bool        _RN = false;            //é para rede neural?
     //RN
-    int         _qtdDino = 1;       // Quantidade de dinossauros
-    int         _qtdFloor = 16;      // Quantidade de Chão
-    int         _qtdObstacles;  // Quantidade de Obstaculos
-    int        *_obsPositions;  // vetor de posições dos obstaculos
-    int         _obsMinDist;    // Distância minima entre obstaculos 
+    int         _qtdDino = 1;           // Quantidade de dinossauros
+    int         _qtdFloor = 16;         // Quantidade de Chão
+    int         _qtdObstacles;          // Quantidade de Obstaculos
+    int        *_obsPositions;          // vetor de posições dos obstaculos
+    int         _obsMinDist;            // Distância minima entre obstaculos 
 
 
 
