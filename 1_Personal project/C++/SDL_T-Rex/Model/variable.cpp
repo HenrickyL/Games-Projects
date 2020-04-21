@@ -14,7 +14,11 @@
     std::vector<Floor*>      floors;
     std::vector<T_REX*>      t_rexs;
     std::vector<OBSTC*>      obstacles;
-    
+    //Colors
+    std::map<std::string, SDL_Color>colors;
+    //Fonts
+    std::map<std::string,TTF_Font*>fonts;
+
     //Game Constants
     double                  Spd_Floor_OBS = 0.1; //velociade dos obstaculos e chao
     double                  Spd_max = 0.6;

@@ -25,6 +25,7 @@ _RN(RN)
     generateFloor();
     generateObstacle();
     generateT_rex();
+    generateUI();
     std::cout << "<GAME :: Create!>\n";
 }
 Game::Game()
@@ -32,20 +33,24 @@ Game::Game()
     //inicalizar variaveis
     init();
      //geradores
+    generateColors();
     generateWindow();
     generateFloor();
     generateT_rex();
+    generateUI();
     //generateObstacle();
     
     std::cout << "<GAME :: Create!>\n";
 }
 
 Game::~Game(){
-    destroyWindow();
     destroyFloor();
     destroyObstacle();
     destroyT_rex();
-    destroyTexts();
+    destroyUI();
+    destroyWindow();
+    //encerrar o TTF
+    TTF_Quit();
 }
 
 
@@ -121,14 +126,15 @@ void Game::stop(){
 
 //Inicializador /////////////////////////////////////////////////////////////////
  void Game::init(){
+     //inicaliar TTF
+     if(TTF_Init() == -1){
+         std::cerr << "<Erro ao inicializar TTF!>\n";
+     }
+     //inicalizar variaveis
      _qtdDino = QTD_DINOS;
      _qtdObstacles = QTD_OBSTACLES;
      _qtdFloor; // * com base na quantidade de obstaculos
-     std::cerr << "Criando ScoreText ...\n";
-     //_scoreText = new Text(_window,30);
-     if(_scoreText == nullptr){
-         std::cerr << "Falha ao criar TextScore!\n";
-     }
+     
  }
  void Game::initStart(){
     _start = true; // para a verificações de keys
@@ -221,6 +227,29 @@ void Game::randomGenerate(int *pos, int len, int initPos, int distMin){
     }
 
 }
+//gerar as UIs
+void Game::generateUI(){
+    _font = new Text();
+    _font->addFont(20);
+    _scoreUI = new UILabel(_window,200, 100, "TextSprite", "arial", "black");
+    //UILabel(_window,WIDTH,HEIGHT);
+    if(_scoreUI == nullptr){
+        std::cerr << "Falha ao gerar ScoreUI!\n";
+    }else{
+        std::cerr << "UI Criada!\n";
+    }
+    
+}
+
+//gerador de cores
+void Game::generateColors(){
+    std::cerr << "<Cores Criadas!>";
+    colors["white"] = {255,255,255};
+    colors["black"] = {0,0,0};
+    colors["blue"] = {0,0,255};
+    colors["red"] = {255,0,0};
+    colors["green"] = {0,255,0};
+}
 //DESTRUTOTES ////////////////////////////////////////////////////////////////////
 void Game::destroyWindow(){
     delete _window;
@@ -241,8 +270,9 @@ void Game::destroyObstacle(){
         delete obstacles.at(i);
     }
 } 
-void Game::destroyTexts(){
-    delete _scoreText;
+void Game::destroyUI(){
+    delete _font;
+    delete _scoreUI;
 }
 //Atualizadores /////////////////////////////////////////////////////////////////
 void Game::tickEntities(){
@@ -273,14 +303,14 @@ void Game::renderObstacle(){
             obstacles.at(i)->render();
         }
     }
-
 }
 
 void Game::renderScore(){
-    if(_scoreText != nullptr){
+    if(_scoreUI != nullptr){
         std::string str = "";
 	    str += std::to_string(_score);
-        _scoreText->drawText(str,WIDTH-1,2);
+        _scoreUI->setLabelText(str);
+        _scoreUI->render();
     }
     
 }

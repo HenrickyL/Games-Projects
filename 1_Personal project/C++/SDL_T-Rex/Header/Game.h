@@ -13,6 +13,7 @@
 #include "Floor.h"
 #include "Obstacle.h"
 #include "Text.h"
+#include "UI.h"
 
 class Game{
 public:
@@ -35,13 +36,14 @@ private://métodos privados
     void generateT_rex();       // criar o(s) Dinossauros
     void generateObstacle();    // Geraa os obstaculos
     void randomGenerate(int *pos, int len, int initPos, int distMin);
-    
+    void generateColors();      // gera os valores de cores (variable.h)
+    void generateUI();          // gerar as UIs
     //Destrutores
     void destroyWindow();       // destroi a janela
     void destroyFloor();        // destroi todo o chão
     void destroyT_rex();        // destroi todos os dinossauros
     void destroyObstacle();     // destroi todos os obstaculos
-    void destroyTexts();        // Destroi todos os textos
+    void destroyUI();           // Destroi todos os UI
     
     //Atualizadores das entidades
     void tickEntities();        //atualização das entidades    
@@ -59,7 +61,8 @@ private://métodos privados
 private:
     bool        _start=false;           // Estado de o jogo ter iniciado
     Window      *_window;               // ponteiro para a janela criada
-    Text        *_scoreText;            // ponteiro para o gerador de texto
+    Text        *_font;
+    UILabel     *_scoreUI;            // ponteiro para o gerador de texto
     bool        _runing = false;        // variavel do game loop
     int         _score = 0;             // contador
     bool        _RN = false;            //é para rede neural?

@@ -59,7 +59,7 @@ void Window::setClosed(bool closed){
 void Window::upgradeVar(){
     //atualiza os ticks
     _ticks++;
-    if(_ticks%2000 ==0 ) _time++;
+    if(_ticks%_timeSet ==0 ) _time++;
 }
 void Window::pollEvents(){
     //crio um evento

@@ -9,8 +9,9 @@
 #include "Obstacle.h"
 #include <string>
 #include <vector>
+#include <map>
 
-
+    
     //Variáveis
     extern char                     title[];// = "T_REX";
     extern int                      H_Floor;// = 70;
@@ -29,7 +30,9 @@
     extern std::vector<Floor*>      floors;
     extern std::vector<T_REX*>      t_rexs;
     extern std::vector<OBSTC*>      obstacles;
-
+    //Cores
+    extern std::map<std::string, SDL_Color>colors;      //mapa de cores (id, valor)
+    extern std::map<std::string,TTF_Font*>fonts;        // fonts criadas
     //Game Constants
     extern double                  Spd_Floor_OBS; //velociade dos obstaculos e chao
     extern double                  Spd_max;

@@ -26,6 +26,7 @@ private:
     void upgradeVar();
      
 private: //atributos
+    int _timeSet = 600;
     std::string _title = "Title"; //titulo
     SDL_Window *_window;
     static bool _closed;
