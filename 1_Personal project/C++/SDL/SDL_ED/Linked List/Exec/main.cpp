@@ -3,6 +3,7 @@
 #include "QX_ED.hpp"
 #include <string>
 //#include "Rect.h"
+
 /*
 g++ main.cpp Window.cpp QX_ED.cpp -o main -lSDL2 -lSDL2_ttf
 
